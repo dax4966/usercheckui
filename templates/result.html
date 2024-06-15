@@ -12,14 +12,52 @@
         th, td {
             padding: 10px;
         }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #splitContainer {
+            flex: 1;
+            display: flex;
+            transition: all 0.5s ease;
+        }
+        #leftPane, #rightPane {
+            height: 100%;
+            border: 1px solid black;
+            overflow: auto;
+            transition: all 0.5s ease;
+        }
+        #leftPane {
+            flex: 1;
+            padding: 20px;
+        }
+        #rightPane {
+            flex: 0; 
+            
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+            cursor: pointer;
+        }
        
     </style>
-
 
 </head>
 <body>
     <body>
-       
+        <div id="splitContainer">
+        <div id="leftPane">
         <p>Debit Sum: {{ debit_sum }}</p>
         <p>Credit Sum: {{ credit_sum }}</p>
         <p>Difference: {{ difference }}</p>
@@ -43,7 +81,9 @@
                     {% for win in winnings_info %}
                     <tr>
                         <td>{{ loop.index }}</td>
-                        <td><a href="{{ win.link }}" target="_blank">{{ win.contest_id }}</a></td>
+                        <!-- <td><a href="{{ win.link }}" target="_blank">{{ win.contest_id }}</a></td> -->
+                        <td ><a href="#" data-url="{{ win.link }}" class="dynamic-link">{{ win.contest_id }}</a></td> 
+                        
                         <td>{{ win.amount }}</td>
                         <td>{{ win.transaction_type }}</td>
                         <td>{{ win.transaction_time }}</td>
@@ -82,7 +122,7 @@
                     <tr>
                         <td>{{ loop.index }}</td>
                         <!-- <td>{{ refund.contest_id }}</td> -->
-                         <td><a href="{{ refund.link }}" target="_blank">{{ refund.contest_id }}</a></td> 
+                         <td ><a href="#" data-url="{{ refund.link }}" class="dynamic-link">{{ refund.contest_id }}</a></td> 
                         
                          
                         <td>{{ refund.amount }}</td>
@@ -147,7 +187,23 @@
             {% else %}
             <p>No validation errors.</p>
             {% endif %}
+            </div>
+            <div id="rightPane">
 
+            </div>
+            <script>
+                document.querySelectorAll('.dynamic-link').forEach(function(link) {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const url = link.getAttribute('data-url');
+                        console.log('url : '+url);
+                        document.getElementById('leftPane').style.flex = '1';
+                        document.getElementById('rightPane').style.flex = '1';
+                        document.getElementById('rightPane').innerHTML = `<iframe src="${url}" style="width: 100%; height: 100%; border: none;"></iframe>`;
+                        console.log('url processed');
+                    });
+                });
+            </script>
           
     </body>
 </body>
